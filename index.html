@@ -475,6 +475,27 @@ input[type=range].vol-slider::-webkit-slider-thumb {
   background: var(--accent); box-shadow: 0 0 6px var(--accent); cursor: pointer;
 }
 
+/* ── Hide sections when running ── */
+.input-section,
+.options-section,
+.bottom-row {
+  transition: opacity 0.4s ease, transform 0.4s ease, max-height 0.4s ease, margin 0.4s ease, padding 0.4s ease;
+  max-height: 500px;
+  overflow: hidden;
+}
+.sections-hidden .input-section,
+.sections-hidden .options-section,
+.sections-hidden .bottom-row {
+  opacity: 0;
+  pointer-events: none;
+  max-height: 0;
+  transform: translateY(-8px);
+  margin-top: 0;
+  margin-bottom: 0;
+  padding-top: 0;
+  padding-bottom: 0;
+}
+
 /* flash overlay */
 .alert-overlay {
   display: none; position: fixed; inset: 0;
@@ -783,6 +804,7 @@ function runCooldown(cb) {
   setBodyState('countdown');
   document.getElementById('statusBar').textContent = 'STARTING IN…';
   counting = true;
+  document.querySelector('.shell').classList.add('sections-hidden');
   overlay.classList.add('show');
 
   function step() {
@@ -822,6 +844,7 @@ function startTimer() {
   const doStart = () => {
     if (document.getElementById('toggleBuzzer').checked) playStartBuzzer();
     running = true;
+    document.querySelector('.shell').classList.add('sections-hidden');
     setBodyState('active');
     document.getElementById('statusBar').textContent = 'RUNNING';
     mainInterval = setInterval(() => {
@@ -863,6 +886,7 @@ function resetTimer() {
   buzzerNodes.forEach(n => { try { n.stop(); } catch(e){} }); buzzerNodes = [];
   document.getElementById('cdOverlay').classList.remove('show');
   document.getElementById('alertOverlay').classList.remove('show');
+  document.querySelector('.shell').classList.remove('sections-hidden');
   document.getElementById('btnStart').disabled = false;
   document.getElementById('btnPause').disabled = true;
   document.getElementById('timeText').textContent = '00:00:00';
